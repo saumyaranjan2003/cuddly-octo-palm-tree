@@ -1,0 +1,24 @@
+- [ ] Verify that the copilot-instructions.md file in the .github directory is created.
+- [ ] Clarify Project Requirements
+- [ ] Scaffold the Project
+- [ ] Customize the Project
+- [ ] Install Required Extensions
+- [ ] Compile the Project
+- [ ] Create and Run Task
+- [ ] Launch the Project
+- [ ] Ensure Documentation is Complete
+
+Execution Guidelines:
+- Work through each checklist item systematically.
+- Keep communication concise and focused.
+- Follow development best practices.
+- Use '.' as the working directory unless user specifies otherwise.
+- Do not create a new folder unless the user explicitly requests it besides a .vscode folder for a tasks.json file.
+- Only install extensions specified by the get_project_setup_info tool.
+- Avoid adding media or external links unless explicitly requested.
+- Ensure all generated components serve a clear purpose within the user's requested workflow.
+- Your task is complete when:
+  - Project is successfully scaffolded and compiled without errors
+  - copilot-instructions.md file in the .github directory exists in the project
+  - README.md file exists and is up to date
+  - User is provided with clear instructions to debug/launch the project

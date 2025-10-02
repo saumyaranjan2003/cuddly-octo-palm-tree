@@ -99,8 +99,8 @@ function onDrop(e, col) {
   const modal = new bootstrap.Modal(modalEl);
   modal.show();
 
-  // Add Task button
-  document.getElementById('addTaskBtn').onclick = function() {
+// Add Task button
+document.getElementById('addTaskBtn').onclick = function() {
   const title = document.getElementById('taskTitle').value.trim();
 
   // Check if label input has some value, push it automatically

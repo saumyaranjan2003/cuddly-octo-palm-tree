@@ -20,4 +20,4 @@ Open `index.html` in your browser.
 ---
 
 This project is for demo and learning purposes.
->>>>>>> d7ae529 (Initial Kanban board project commit)
+

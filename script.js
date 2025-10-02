@@ -16,6 +16,7 @@ function renderBoard() {
       taskDiv.innerHTML = `
         <span class="task-title">${task}</span>
         <span class="task-actions">
+          <button class="btn btn-sm btn-primary" onclick="editTask('${col}', ${idx})">✏️</button>
           <button class="btn btn-sm btn-danger" onclick="deleteTask('${col}', ${idx})">&times;</button>
         </span>
       `;
@@ -25,6 +26,7 @@ function renderBoard() {
     column.ondrop = e => onDrop(e, col);
   });
 }
+
 
 function getTasks(col) {
   return JSON.parse(localStorage.getItem('kanban-' + col) || '[]');

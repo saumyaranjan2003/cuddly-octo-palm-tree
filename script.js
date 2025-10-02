@@ -1,29 +1,43 @@
 let draggedTask = null;
 let draggedFrom = null;
 let addTaskTargetColumn = null;
+let tempLabels = [];
 
 function renderBoard() {
-  ['todo', 'inprogress', 'done'].forEach(col => {
-    const column = document.getElementById(col);
-    column.innerHTML = '';
-    const tasks = getTasks(col);
-    tasks.forEach((task, idx) => {
-      const taskDiv = document.createElement('div');
-      taskDiv.className = 'kanban-task';
-      taskDiv.draggable = true;
-      taskDiv.ondragstart = e => onDragStart(e, col, idx);
-      taskDiv.ondragend = onDragEnd;
-      taskDiv.innerHTML = `
-        <span class="task-title">${task}</span>
-        <span class="task-actions">
-          <button class="btn btn-sm btn-danger" onclick="deleteTask('${col}', ${idx})">&times;</button>
-        </span>
-      `;
-      column.appendChild(taskDiv);
-    });
-    column.ondragover = e => e.preventDefault();
-    column.ondrop = e => onDrop(e, col);
+['todo', 'inprogress', 'done'].forEach(col => {
+  const column = document.getElementById(col);
+  column.innerHTML = '';
+  const tasks = getTasks(col);
+
+  tasks.forEach((task, idx) => {
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'kanban-task';
+    taskDiv.draggable = true;
+    taskDiv.ondragstart = e => onDragStart(e, col, idx);
+    taskDiv.ondragend = onDragEnd;
+
+    // Build labels HTML
+    const labelsHTML = task.labels 
+  ? task.labels.map(label => 
+      `<span class="task-label" style="background-color: ${label.color}">${label.name}</span>`).join(' ') 
+  : '';
+
+    taskDiv.innerHTML = `
+      <div>
+        <span class="task-title">${task.title}</span><br>
+        <div class="task-labels">${labelsHTML}</div>
+      </div>
+      <span class="task-actions">
+        <button class="btn btn-sm btn-danger" onclick="deleteTask('${col}', ${idx})">&times;</button>
+      </span>
+    `;
+
+    column.appendChild(taskDiv);
   });
+
+  column.ondragover = e => e.preventDefault();
+  column.ondrop = e => onDrop(e, col);
+});
 }
 
 function getTasks(col) {
@@ -34,9 +48,9 @@ function setTasks(col, tasks) {
   localStorage.setItem('kanban-' + col, JSON.stringify(tasks));
 }
 
-function addTask(col, title) {
+function addTask(col, title, labels = []) { //labels = [] as default, so even if no label is passed, it won’t break
   const tasks = getTasks(col);
-  tasks.push(title);
+  tasks.push({ title, labels }); // store labels also
   setTasks(col, tasks);
   renderBoard();
 }
@@ -73,18 +87,56 @@ function onDrop(e, col) {
   }
 }
 
-function showAddTaskModal(col) {
+  function showAddTaskModal(col) {
   addTaskTargetColumn = col;
+  tempLabels = []; // reset each time
   document.getElementById('taskTitle').value = '';
-  const modal = new bootstrap.Modal(document.getElementById('addTaskModal'));
+  document.getElementById('taskLabels').value = '';
+  document.getElementById('taskLabelColor').value = '#6c757d';
+  document.getElementById('currentLabels').innerHTML = '';
+
+  const modalEl = document.getElementById('addTaskModal');
+  const modal = new bootstrap.Modal(modalEl);
   modal.show();
+
+  // Add Task button
   document.getElementById('addTaskBtn').onclick = function() {
-    const title = document.getElementById('taskTitle').value.trim();
-    if (title) {
-      addTask(addTaskTargetColumn, title);
-      modal.hide();
-    }
-  };
+  const title = document.getElementById('taskTitle').value.trim();
+
+  // Check if label input has some value, push it automatically
+  const name = document.getElementById('taskLabels').value.trim();
+  const color = document.getElementById('taskLabelColor').value;
+  if (name) {
+    tempLabels.push({ name, color });
+  }
+
+  if (title) {
+    addTask(addTaskTargetColumn, title, tempLabels);
+    modal.hide();
+  }
+};
 }
+
+// Add single label to tempLabels
+document.getElementById('addLabelBtn').onclick = function() {
+  const name = document.getElementById('taskLabels').value.trim();
+  const color = document.getElementById('taskLabelColor').value;
+  if (!name) return;
+
+  tempLabels.push({ name, color });
+
+  // Show currently added labels
+  const current = document.getElementById('currentLabels');
+  const span = document.createElement('span');
+  span.textContent = name;
+  span.style.backgroundColor = color;
+  span.className = 'task-label me-1 mb-1';
+  current.appendChild(span);
+
+  // Reset inputs
+  document.getElementById('taskLabels').value = '';
+  document.getElementById('taskLabelColor').value = '#6c757d';
+};
+
 
 document.addEventListener('DOMContentLoaded', renderBoard);

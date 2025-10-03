@@ -22,6 +22,14 @@ body {
 .kanban-task .task-title {
   flex: 1;
 }
+.kanban-task .task-description {
+  font-size: 0.9em;
+  color: #6c757d;
+}
+[contenteditable="true"] {
+  outline: 2px dashed #0d6efd;
+  cursor: text;
+}
 .kanban-task .task-actions button {
   margin-left: 4px;
 }

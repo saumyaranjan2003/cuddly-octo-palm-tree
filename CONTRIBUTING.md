@@ -39,7 +39,7 @@ In the interest of fostering an open and welcoming environment, we as contributo
 - Be respectful and constructive in all communications.
 - Use welcoming and inclusive language.
 - Accept constructive criticism gracefully.
-- Focus on what is best for the community.
+- Focus on what is best for the communi
 
 ### Enforcement
 

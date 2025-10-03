@@ -50,14 +50,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <input type="text" id="taskTitle" class="form-control" placeholder="Task title">
-          <div class="mt-2">
-            <input type="text" id="taskLabels" class="form-control mb-2" placeholder="Label name">
-            <input type="color" id="taskLabelColor" class="form-control form-control-color" title="Choose label color">
-            <button type="button" class="btn btn-sm btn-secondary mt-2" id="addLabelBtn">Add Label</button>
-        </div>
-          <div id="currentLabels" class="mt-2"></div>
-        </div>
+            <div class="mb-3">
+              <input type="text" id="taskTitle" class="form-control" placeholder="Task title">
+            </div>
+            <div class="mb-3">
+              <label for="taskDueDate" class="form-label">Due date</label>
+              <input type="date" id="taskDueDate" class="form-control">
+            </div>
+          </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-primary" id="addTaskBtn">Add Task</button>

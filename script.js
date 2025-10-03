@@ -6,6 +6,7 @@
 let draggedTask = null;
 let draggedFrom = null;
 let addTaskTargetColumn = null;
+let tempLabels = [];
 
 function renderBoard() {
   ['todo', 'inprogress', 'done'].forEach(col => {
@@ -13,6 +14,7 @@ function renderBoard() {
     if (!column) return;
     column.innerHTML = '';
     const tasks = getTasks(col);
+
     tasks.forEach((task, idx) => {
       const taskDiv = document.createElement('div');
       taskDiv.className = 'kanban-task';
@@ -33,8 +35,10 @@ function renderBoard() {
           <button class="btn btn-sm btn-danger" onclick="deleteTask('${col}', ${idx})">&times;</button>
         </span>
       `;
+
       column.appendChild(taskDiv);
     });
+
     column.ondragover = e => e.preventDefault();
     column.ondrop = e => onDrop(e, col);
   });
@@ -92,6 +96,7 @@ function onDrop(e, col) {
     const toTasks = getTasks(col);
     toTasks.push(draggedTask);
     setTasks(col, toTasks);
+
     renderBoard();
   }
 }
@@ -132,5 +137,26 @@ function editTask(col, idx) {
     renderBoard();
   }
 }
+
+// Add single label to tempLabels
+document.getElementById('addLabelBtn').onclick = function() {
+  const name = document.getElementById('taskLabels').value.trim();
+  const color = document.getElementById('taskLabelColor').value;
+  if (!name) return;
+
+  tempLabels.push({ name, color });
+
+  // Show currently added labels
+  const current = document.getElementById('currentLabels');
+  const span = document.createElement('span');
+  span.textContent = name;
+  span.style.backgroundColor = color;
+  span.className = 'task-label me-1 mb-1';
+  current.appendChild(span);
+
+  // Reset inputs
+  document.getElementById('taskLabels').value = '';
+  document.getElementById('taskLabelColor').value = '#6c757d';
+};
 
 document.addEventListener('DOMContentLoaded', renderBoard);

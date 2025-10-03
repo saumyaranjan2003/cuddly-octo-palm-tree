@@ -27,11 +27,11 @@ function renderBoard() {
 
       taskDiv.innerHTML = `
         <div>
-          <span class="task-title">${escapeHtml(task.title)}</span>
+          <div class="task-title" contenteditable="true" onblur="updateTask('${col}', ${idx}, 'title', this.innerText)">${escapeHtml(task.title)}</div>
+          <div class="task-description" contenteditable="true" onblur="updateTask('${col}', ${idx}, 'description', this.innerText)">${escapeHtml(task.description)}</div>
           <span class="task-due ${dueClass}">📅 ${task.dueDate || 'No due date'}</span>
         </div>
         <span class="task-actions">
-          <button class="btn btn-sm btn-primary" onclick="editTask('${col}', ${idx})">✏️</button>
           <button class="btn btn-sm btn-danger" onclick="deleteTask('${col}', ${idx})">&times;</button>
         </span>
       `;
@@ -62,11 +62,19 @@ function setTasks(col, tasks) {
   localStorage.setItem('kanban-' + col, JSON.stringify(tasks));
 }
 
-function addTask(col, title, dueDate) {
+function addTask(col, title, description, dueDate) {
   const tasks = getTasks(col);
-  tasks.push({ title, dueDate });
+  tasks.push({ title, description, dueDate });
   setTasks(col, tasks);
   renderBoard();
+}
+
+function updateTask(col, idx, field, value) {
+  const tasks = getTasks(col);
+  if (tasks[idx]) {
+    tasks[idx][field] = value;
+    setTasks(col, tasks);
+  }
 }
 
 function deleteTask(col, idx) {
@@ -104,8 +112,10 @@ function onDrop(e, col) {
 function showAddTaskModal(col) {
   addTaskTargetColumn = col;
   const titleEl = document.getElementById('taskTitle');
+  const descriptionEl = document.getElementById('taskDescription');
   const dueEl = document.getElementById('taskDueDate');
   if (titleEl) titleEl.value = '';
+  if (descriptionEl) descriptionEl.value = '';
   if (dueEl) dueEl.value = '';
   const modalEl = document.getElementById('addTaskModal');
   if (!modalEl) return;
@@ -115,48 +125,14 @@ function showAddTaskModal(col) {
   if (addBtn) {
     addBtn.onclick = function() {
       const title = (titleEl && titleEl.value) ? titleEl.value.trim() : '';
+      const description = (descriptionEl && descriptionEl.value) ? descriptionEl.value.trim() : '';
       const dueDate = dueEl ? dueEl.value : '';
       if (title) {
-        addTask(addTaskTargetColumn, title, dueDate);
+        addTask(addTaskTargetColumn, title, description, dueDate);
         modal.hide();
       }
     };
   }
 }
 
-function editTask(col, idx) {
-  const tasks = getTasks(col);
-  const task = tasks[idx];
-  if (!task) return;
-  const newTitle = prompt('Edit task title:', task.title);
-  const newDueDate = prompt('Edit due date (YYYY-MM-DD):', task.dueDate || '');
-  if (newTitle !== null && newTitle.trim() !== '') {
-    tasks[idx].title = newTitle.trim();
-    tasks[idx].dueDate = newDueDate;
-    setTasks(col, tasks);
-    renderBoard();
-  }
-}
 
-// Add single label to tempLabels
-document.getElementById('addLabelBtn').onclick = function() {
-  const name = document.getElementById('taskLabels').value.trim();
-  const color = document.getElementById('taskLabelColor').value;
-  if (!name) return;
-
-  tempLabels.push({ name, color });
-
-  // Show currently added labels
-  const current = document.getElementById('currentLabels');
-  const span = document.createElement('span');
-  span.textContent = name;
-  span.style.backgroundColor = color;
-  span.className = 'task-label me-1 mb-1';
-  current.appendChild(span);
-
-  // Reset inputs
-  document.getElementById('taskLabels').value = '';
-  document.getElementById('taskLabelColor').value = '#6c757d';
-};
-
-document.addEventListener('DOMContentLoaded', renderBoard);

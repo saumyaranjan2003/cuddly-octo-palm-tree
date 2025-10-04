@@ -1,6 +1,6 @@
 /* Body & general */
 body {
-    background: linear-gradient(135deg, #5b72f4,rgb(106, 226, 244));
+  background: linear-gradient(135deg, #5b72f4, rgb(106, 226, 244));
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
@@ -50,21 +50,35 @@ h1 {
   flex: 1;
   font-weight: 500;
   color: #333;
-  line-height: 1.3;       /* merged from main */
-  word-break: break-word; /* merged from main */
+  line-height: 1.3;
+  word-break: break-word;
+  margin-bottom: 6px;
 }
 
 .kanban-task .task-description {
   font-size: 0.9em;
   color: #6c757d;
+  margin-bottom: 6px;
+}
+
+.task-due {
+  font-size: 0.85em;
+  display: inline-block;
 }
 
 [contenteditable="true"] {
   outline: 2px dashed #0d6efd;
   cursor: text;
+  padding: 6px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.6);
 }
 
+.task-actions {
+  margin-left: 12px;
+}
 
+/* Responsive */
 @media (max-width: 576px) {
   #kanban-board {
     display: block;
